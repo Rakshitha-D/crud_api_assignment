@@ -38,3 +38,19 @@ def create_records(record: Record):
     new_record = cursor.fetchone()
     conn.commit()
     return {"record_inserted": new_record}
+
+@app.patch("/v1/dataset/{dataset_id}")
+def update_record(dataset_id,record: Record):
+    cursor.execute("""UPDATE datasets set name=%s WHERE dataset_id=%s """,(record.name,dataset_id))
+    updated_record = cursor.fetchone()
+    conn.commit()
+    if updated_record == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"record with id: {id} does not exist")
+    return {"record": updated_record}
+
+@app.delete("/v1/dataset/{id}")
+def delete_record(id):
+    cursor.execute("""DELETE FROM datasets where id = %s returning *""",(id,))
+    deleted_post=cursor.fetchone()
+    conn.commit()
+    return {"deleted_post": deleted_post}
