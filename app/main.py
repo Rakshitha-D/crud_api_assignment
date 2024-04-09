@@ -57,8 +57,6 @@ def update_record(dataset_id,record: UpdateRecord):
     update_fields = ", ".join(f"{field}=%s" for field in record.model_dump(exclude_unset=True))
     update_values = [getattr(record, field) for field in record.model_dump(exclude_unset=True)]
     update_values.append(dataset_id)
-    print(update_fields)
-    print(update_values)
     cursor.execute(f"""UPDATE datasets SET {update_fields} WHERE dataset_id = %s RETURNING *""", update_values)
     updated_record = cursor.fetchone()
     conn.commit()
@@ -69,9 +67,11 @@ def update_record(dataset_id,record: UpdateRecord):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"record with id: {id} does not exist")
     return {"record": updated_record}
 
-@app.delete("/v1/dataset/{dataset_id}")
+@app.delete("/v1/dataset/{dataset_id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_record(dataset_id):
     cursor.execute("""DELETE FROM datasets where id = %s returning *""",(dataset_id,))
-    deleted_post=cursor.fetchone()
+    deleted_record=cursor.fetchone()
     conn.commit()
-    return {"deleted_post": deleted_post}
+    if deleted_record ==None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"record with dataset_id: {dataset_id} does not exist")
+    return {"deleted_record": deleted_post}
