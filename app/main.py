@@ -15,15 +15,19 @@ class Record(BaseModel):
     updated_date: str
 
 class UpdateRecord(BaseModel):
-    id: str | None = None
+    id: Optional[str]= None
     dataset_id: str | None = None
     type: str | None = None
     name: str | None = None
     updated_date: str 
 
-conn = psycopg2.connect(host='localhost',database='obsrv',user='postgres',password='drakshitha',cursor_factory=RealDictCursor)
-cursor = conn.cursor()
-print("Database connection was succesfull")
+try:
+    conn = psycopg2.connect(host='localhost',database='obsrv',user='postgres',password='drakshitha',cursor_factory=RealDictCursor)
+    cursor = conn.cursor()
+    print("Database connection was succesfull")
+except Exception as error:
+    print("Failed to connect Database")
+    print("Error: ",error)
 
 @app.get("/v1/dataset/{dataset_id}")
 def get_record(dataset_id):
