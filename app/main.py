@@ -12,6 +12,9 @@ class Record(BaseModel):
     type: str
     name: str
 
+conn = psycopg2.connect(host='localhost',database='obsrv',user='postgres',password='drakshitha',cursor_factory=RealDictCursor)
+cursor = conn.cursor()
+print("Database connection was succesfull")
 
 @app.get("/v1/dataset/{dataset_id}")
 def get_record():
