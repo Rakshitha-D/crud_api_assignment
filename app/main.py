@@ -18,8 +18,7 @@ print("Database connection was succesfull")
 
 @app.get("/v1/dataset/{dataset_id}")
 def get_record(dataset_id):
-    print(type(dataset_id))
-    cursor.execute(f"""SELECT * FROM datasets where dataset_id = '{dataset_id}' """)
+    cursor.execute("""SELECT * FROM datasets where dataset_id = %s """,(dataset_id,))
     record = cursor.fetchone()
     if not record:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"record with id: {dataset_id} was not found")
