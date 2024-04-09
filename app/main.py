@@ -45,7 +45,7 @@ def get_all_records():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="no records found")
     return {"records": records}
 
-@app.post("/v1/dataset")
+@app.post("/v1/dataset",status_code=status.HTTP_201_CREATED)
 def create_records(record: Record):
     cursor.execute("""insert into datasets (id,dataset_id,type,name,updated_date) values (%s,%s,%s,%s,%s) returning * """,(record.id,record.dataset_id,record.type,record.name,record.updated_date))
     new_record = cursor.fetchone()
