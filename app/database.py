@@ -1,6 +1,8 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
+from fastapi import FastAPI,HTTPException,status
+
 class Connection():
     try:
         conn = psycopg2.connect(host='localhost',database='obsrv',user='postgres',password='drakshitha',cursor_factory=RealDictCursor)

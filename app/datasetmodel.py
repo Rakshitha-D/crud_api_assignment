@@ -1,14 +1,14 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class Record(BaseModel):
+class Dataset(BaseModel):
     id: str
     dataset_id: str
     type: str
     name: str
     updated_date: str
 
-class UpdateRecord(BaseModel):
+class UpdateDataset(BaseModel):
     id: Optional[str]= None
     dataset_id: str | None = None
     type: str | None = None
