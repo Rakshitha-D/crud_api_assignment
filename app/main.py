@@ -1,25 +1,8 @@
-from typing import Optional
 from fastapi import FastAPI, HTTPException,status
-from pydantic import BaseModel
 from datetime import datetime
 from .database import connection
-
+from .datasetmodel import Record,UpdateRecord
 app = FastAPI()
-
-class Record(BaseModel):
-    id: str
-    dataset_id: str
-    type: str
-    name: str
-    updated_date: str
-
-class UpdateRecord(BaseModel):
-    id: Optional[str]= None
-    dataset_id: str | None = None
-    type: str | None = None
-    name: str | None = None
-    updated_date: str 
-
 
 
 @app.get("/v1/dataset/{dataset_id}")
