@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException,status
 from datetime import datetime
 from .database import connection
-from .datasetmodel import Dataset,UpdateDataset
+from .datasetmodel import Dataset,UpdateDataset,SchemaValidation
 import json
 app = FastAPI()
 
@@ -23,7 +23,8 @@ def get_all_records():
     return {"records": dataset}
 
 @app.post("/v1/dataset",status_code=status.HTTP_201_CREATED)
-def create_records(dataset: Dataset):
+def create_records(dataset: SchemaValidation):
+    #dataset.model_validate()
     updated_date = datetime.now()
     insert_fields=", ".join(f"{field}" for field in dataset.model_dump())
     print(insert_fields)

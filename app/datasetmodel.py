@@ -20,6 +20,24 @@ class Dataset(BaseModel):
     created_by: str
     updated_by: str
 
+class SchemaValidation(BaseModel):
+    id: str
+    dataset_id: str
+    type: str
+    name: str
+    validation_config: object
+    extraction_config: object
+    dedup_config: object
+    data_schema: object
+    denorm_config: object
+    router_config: object
+    dataset_config: object
+    status: str
+    tags: List[str]
+    data_version: int
+    created_by: str
+    updated_by: str
+
 class UpdateDataset(BaseModel):
     #id: Optional[str]= None
     #dataset_id: str | None = None
