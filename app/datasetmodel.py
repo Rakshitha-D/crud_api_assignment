@@ -3,7 +3,7 @@ from pydantic import BaseModel,Field
 from typing_extensions import Any, Dict, List, Optional, TypedDict, Union
 from datetime import datetime
 
-
+"""
 class ValidationConfig(BaseModel):
     validate: bool
     mode: str
@@ -19,28 +19,29 @@ class ExtractionConfig(BaseModel):
     extraction_key: str
     dedup_config: DedupConfig
     batch_id: str
+"""
 
 class Dataset(BaseModel):
     id: str
     dataset_id: str
     type: str
-    name: str
-    validation_config: object
-    extraction_config: object
-    dedup_config : object
-    data_schema: object
-    denorm_config: object
-    router_config: object
-    dataset_config: object
-    status: str
-    tags: List[str]
-    data_version: int
-    created_by: str
-    updated_by: str
+    name: str | None = None
+    validation_config: object | None = None
+    extraction_config: object | None = None
+    dedup_config : object | None = None
+    data_schema: object | None = None
+    denorm_config: object | None = None
+    router_config: object | None = None
+    dataset_config: object | None = None
+    status: str | None = None
+    tags: List[str] | None = None
+    data_version: int | None = None
+    created_by: str | None = None
+    updated_by: str | None = None
 
 class UpdateDataset(BaseModel):
     #id: Optional[str]= None
-    dataset_id: str | None = None
+    #dataset_id: str | None = None
     type: str | None = None
     name: str | None = None
     validation_config: dict | None = None
@@ -55,11 +56,3 @@ class UpdateDataset(BaseModel):
     data_version: int | None = None
     created_by: str | None = None
     updated_by: str | None = None
-
-class Response(BaseModel):
-    id: str
-    ver: str
-    ts: datetime
-    params: object
-    responseCode: str
-    result: object
