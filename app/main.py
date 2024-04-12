@@ -14,10 +14,23 @@ def get_dataset_id(dataset_id)->bool:
 
 @app.get("/v1/dataset/{dataset_id}")
 def get_dataset(dataset_id):
-    connection.cursor.execute("""SELECT * FROM datasets where dataset_id = %s """,(dataset_id,))
-    dataset = connection.cursor.fetchone()
-    if not dataset:
-        response = {
+    try:
+        if get_dataset_id(dataset_id):
+            connection.cursor.execute("""SELECT * FROM datasets where dataset_id = %s """,(dataset_id,))
+            dataset = connection.cursor.fetchone()
+            return { "id": "api.dataset.read",
+                "ver": "1.0", 
+                "ts": datetime.now().isoformat() + "Z",
+                "params": {
+                    "err": "null",
+                    "status": "successful",
+                    "errmsg": "null"
+                    },
+                    "responseCode": "OK",
+                    "result": dataset
+                }
+        else:
+            response = {
             "id": "api.dataset.read",
             "ver": "1.0",
             "ts": datetime.now().isoformat() + "Z",
@@ -28,27 +41,12 @@ def get_dataset(dataset_id):
             },
             "responseCode": "NOT_FOUND",
             "result": {}
-        }
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=response)
-    return { "id": "api.dataset.read",
-            "ver": "1.0", 
-            "ts": datetime.now().isoformat() + "Z",
-            "params": {
-                "err": "null",
-                "status": "successful",
-                "errmsg": "null"
-                },
-                "responseCode": "OK",
-                "result": dataset
             }
-
-@app.get("/")
-def get_all_datasets():
-    connection.cursor.execute("""SELECT * FROM datasets""")
-    dataset= connection.cursor.fetchall()
-    if not dataset:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="no records found")
-    return {"records": dataset}
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=response)
+    except HTTPException:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=response)
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @app.post("/v1/dataset")
 def create_dataset(dataset: Dataset):
