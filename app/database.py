@@ -5,7 +5,7 @@ from fastapi import FastAPI,HTTPException,status
 
 class Connection():
     try:
-        conn = psycopg2.connect(host='localhost',database='obsrv',user='postgres',password='drakshitha',cursor_factory=RealDictCursor)
+        conn = psycopg2.connect(host='localhost',database='obsrv',user='obsrv_user',password='obsrv123',cursor_factory=RealDictCursor)
         cursor = conn.cursor()
         print("Database connection was succesfull")
     except Exception as error:
