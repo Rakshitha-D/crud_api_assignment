@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException,status
 from datetime import datetime
-from jsonschema import ValidationError
 from .database import connection
 from .datasetmodel import UpdateDataset,Dataset
 import json
@@ -64,7 +63,8 @@ def create_dataset(dataset: Dataset):
 
             insert_values.append(updated_date)
             connection.cursor.execute(f"""insert into datasets ({insert_fields},updated_date) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning * """,insert_values)
-            new_dataset = connection.cursor.fetchone()
+            data=connection.cursor.fetchone()
+            print(data)
             connection.conn.commit()
             return {"id": "api.dataset.create",
             "ver": "1.0",
@@ -76,7 +76,8 @@ def create_dataset(dataset: Dataset):
             },
             "responseCode": "OK",
             "result": {
-                "id": dataset.dataset_id
+                "id": dataset.dataset_id,
+                "data": data
             }
             }
         elif get_dataset_id(dataset.dataset_id):
@@ -171,7 +172,7 @@ def delete_dataset(dataset_id):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=response)
         else:
             connection.cursor.execute("""DELETE FROM datasets where id = %s returning *""",(dataset_id,))
-            deleted_record=connection.cursor.fetchone()
+            connection.cursor.fetchone()
             connection.conn.commit()
             return {"id": "api.dataset.delete",
             "ver": "1.0",
